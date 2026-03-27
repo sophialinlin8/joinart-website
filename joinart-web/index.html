@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOIN ART | 英国聚艺 International Education</title>
+    <style>
+        :root { --primary: #FFD700; --dark: #000; --white: #fff; --grey: #f9f9f9; }
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; color: #1a1a1a; line-height: 1.6; background: var(--white); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        /* 导航栏 */
+        header { background: var(--white); padding: 0 5%; height: 120px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+        /* 修改点：LOGO 高度放大一倍 */
+        .logo img { height: 100px; width: auto; display: block; }
+        nav { display: flex; align-items: center; gap: 20px; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .lang-switch { border: 2px solid var(--dark); padding: 5px 15px; cursor: pointer; font-size: 11px; font-weight: 900; border-radius: 50px; background: none; margin-left: 10px; }
+
+        [lang="en"] { display: none; }
+
+        /* Banner */
+        .hero { height: 55vh; background: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--dark); text-align: center; padding: 0 5%; }
+        .hero h1 { font-size: clamp(24px, 5vw, 52px); font-weight: 900; margin: 0; letter-spacing: 1px; }
+        .hero p { font-size: 16px; margin-top: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; }
+
+        /* Section 通用 */
+        .section { padding: 80px 5%; max-width: 1400px; margin: 0 auto; }
+        .section-title { font-size: 30px; font-weight: 900; margin-bottom: 50px; border-left: 8px solid var(--primary); padding-left: 20px; text-transform: uppercase; }
+
+        /* 课程网格 */
+        .course-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .course-card { background: var(--primary); border: 2px solid var(--dark); padding: 40px 30px; cursor: pointer; position: relative; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; }
+        .course-card h3 { color: var(--dark); margin: 0; font-size: 19px; font-weight: 900; line-height: 1.3; }
+        .course-card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px var(--dark); }
+        .view-details { margin-top: 20px; font-size: 11px; font-weight: 900; color: var(--primary); background: var(--dark); padding: 8px 16px; width: fit-content; }
+
+        /* 院校库 */
+        .tabs { display: flex; gap: 5px; background: #eee; padding: 5px; margin-bottom: 30px; width: fit-content; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 20px; cursor: pointer; font-weight: 900; font-size: 12px; border: none; background: none; }
+        .tab-btn.active { background: var(--dark); color: var(--primary); }
+        .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+        .school-card { border: 1px solid #eee; padding: 20px; text-decoration: none; color: inherit; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; background: #fff; }
+        .school-card:hover { background: var(--dark); color: var(--primary); transform: translateY(-5px); border-color: var(--dark); }
+        .school-card b { font-size: 16px; font-weight: 800; display: block; }
+        .school-loc { font-size: 10px; font-weight: 700; background: #f0f0f0; color: #666; padding: 2px 6px; display: inline-block; margin-bottom: 10px; border-radius: 2px; }
+
+        /* 案例 (黑底) */
+        .cases-section { background: var(--dark); color: var(--white); }
+        .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .case-card { aspect-ratio: 3/4; background: #222; border: 1px solid #333; position: relative; overflow: hidden; }
+        .case-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px; background: linear-gradient(transparent, #000); }
+
+        /* 弹窗样式 */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; }
+        .modal-content { background: var(--white); width: 100%; max-width: 700px; padding: 45px; position: relative; border-top: 8px solid var(--primary); max-height: 85vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 35px; cursor: pointer; border: none; background: none; }
+        .advantage-box { background: #fffde7; border-left: 5px solid var(--dark); padding: 20px; margin-top: 25px; }
+        .advantage-tag { display: inline-block; background: var(--dark); color: var(--primary); font-size: 10px; padding: 2px 8px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
+
+        /* AI 助手 */
+        #ai-trigger { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: var(--dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3000; border: 3px solid var(--primary); animation: pulse 2s infinite; }
+        #ai-trigger svg { width: 30px; height: 30px; fill: var(--primary); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
+        #ai-window { position: fixed; bottom: 110px; right: 30px; width: 350px; height: 480px; background: var(--white); border: 2px solid var(--dark); border-radius: 16px; display: none; flex-direction: column; z-index: 3000; box-shadow: 0 20px 50px rgba(0,0,0,0.2); overflow: hidden; }
+        .ai-header { background: var(--dark); color: var(--primary); padding: 18px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
+        .ai-chat { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; background: #f4f4f4; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 14px; border-radius: 12px; max-width: 85%; word-wrap: break-word; }
+        .msg.bot { background: #eee; align-self: flex-start; color: #000; border-bottom-left-radius: 2px; }
+        .msg.user { background: var(--dark); color: var(--primary); align-self: flex-end; border-bottom-right-radius: 2px; }
+        .ai-input { display: flex; border-top: 1px solid #eee; }
+        .ai-input input { flex: 1; border: none; padding: 15px; outline: none; }
+        .ai-send { background: var(--primary); border: none; padding: 0 20px; font-weight: 800; cursor: pointer; }
+
+        footer { background: var(--dark); color: var(--white); padding: 60px 5% 30px; text-align: center; }
+        .footer-logo { font-size: 22px; font-weight: 900; color: var(--primary); letter-spacing: 4px; margin-top: 20px; }
+
+        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr !important; } .modal-content { padding: 30px 20px; } .logo img { height: 60px; } header { height: 80px; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="#" class="logo"><img src="images/logo.png" alt="JOIN ART LOGO"></a>
+    <nav>
+        <a href="#about"><span class="cn">关于</span><span class="en" lang="en">About</span></a>
+        <a href="#courses"><span class="cn">课程</span><span class="en" lang="en">Programs</span></a>
+        <a href="#schools"><span class="cn">院校</span><span class="en" lang="en">Schools</span></a>
+        <a href="#cases"><span class="cn">案例</span><span class="en" lang="en">Cases</span></a>
+        <a href="#team"><span class="cn">导师</span><span class="en" lang="en">Mentors</span></a>
+        <a href="#news"><span class="cn">报道</span><span class="en" lang="en">News</span></a>
+        <button class="lang-switch" onclick="toggleLang()">中文 | EN</button>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1 class="cn">Join Art，让艺术梦想照进现实！</h1>
+    <h1 class="en" lang="en">Join Art, Making Art Dreams Reality!</h1>
+    <p class="cn">伦敦总部 · 全球视野 · 顶尖艺术教育</p>
+    <p class="en" lang="en">London HQ · Global Vision · Elite Art Education</p>
+</section>
+
+<section id="about" class="section">
+    <h2 class="section-title"><span class="cn">关于 JOIN ART</span><span class="en" lang="en">About Join Art</span></h2>
+    <div class="about-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+        <div>
+            <div class="cn">
+                <p>Join Art 国际艺术教育位于英国伦敦。作为英国本土艺术教育机构，Join Art 将结合中西方艺术教育的优势，为学生提供线上及线下的教育支持。</p>
+                <p>团队致力于为申请海外顶尖艺术院校的学生提供最新的专业信息，提供一站式、全方位的海外艺术培训与规划服务。</p>
+            </div>
+            <div class="en" lang="en">
+                <p>Based in London, Join Art is a premier UK art institution. We offer holistic training for students aspiring to world-class art schools by combining Eastern and Western pedagogies.</p>
+                <p>Our team provides one-stop, comprehensive overseas art training and planning services.</p>
+            </div>
+        </div>
+        <div style="background: #f0f0f0; aspect-ratio: 16/10; border: 1px solid #eee; overflow: hidden;">
+            <img src="images/about_bg.jpg" alt="JOIN ART Office" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+    </div>
+</section>
+
+<section id="courses" class="section" style="background: var(--grey);">
+    <h2 class="section-title"><span class="cn">课程体系</span><span class="en" lang="en">Programs</span></h2>
+    <div class="course-grid">
+        <div class="course-card" onclick="showModal('portfolio')">
+            <h3><span class="cn">艺术作品集培训</span><span class="en" lang="en">Portfolio Training</span></h3>
+            <div class="view-details"><span class="cn">查看详情</span><span class="en" lang="en">VIEW DETAILS</span></div>
+        </div>
+        <div class="course-card" onclick="showModal('tutoring')">
+            <h3><span class="cn">本硕课程陪跑<br>(Join Art 特色)</span><span class="en" lang="en">Degree Course Tutoring<br>(Exclusive)</span></h3>
+            <div class="view-details"><span class="cn">查看详情</span><span class="en" lang="en">VIEW DETAILS</span></div>
+        </div>
+        <div class="course-card" onclick="showModal('alevel')">
+            <h3><span class="cn">A-level 艺术课程辅导</span><span class="en" lang="en">A-level Art Tutoring</span></h3>
+            <div class="view-details"><span class="cn">查看详情</span><span class="en" lang="en">VIEW DETAILS</span></div>
+        </div>
+        <div class="course-card" onclick="showModal('planning')">
+            <h3><span class="cn">艺术留学申请规划</span><span class="en" lang="en">Application Planning</span></h3>
+            <div class="view-details"><span class="cn">查看详情</span><span class="en" lang="en">VIEW DETAILS</span></div>
+        </div>
+    </div>
+</section>
+
+<section id="schools" class="section">
+    <h2 class="section-title"><span class="cn">全球院校库</span><span class="en" lang="en">Global Schools</span></h2>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="renderSchools('uk', this)">UK (15)</button>
+        <button class="tab-btn" onclick="renderSchools('usa', this)">USA (12)</button>
+        <button class="tab-btn" onclick="renderSchools('eu', this)">EUROPE (8)</button>
+        <button class="tab-btn" onclick="renderSchools('asia', this)">ASIA (8)</button>
+    </div>
+    <div class="school-grid" id="schoolGrid"></div>
+</section>
+
+<section id="cases" class="section cases-section">
+    <h2 class="section-title" style="border-color: #fff;"><span class="cn">案例展示</span><span class="en" lang="en">Case Gallery</span></h2>
+    <div class="case-grid">
+        <div class="case-card">
+            <div class="case-overlay">
+                <div style="font-size:10px; background:var(--primary); color:#000; display:inline-block; padding:2px 8px; font-weight:900;">OFFER: RCA</div>
+                <h4 style="margin:10px 0 5px;">Student Y. Zhang</h4>
+                <p style="font-size:12px; opacity:0.8;">Service Design MA</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-overlay">
+                <div style="font-size:10px; background:var(--primary); color:#000; display:inline-block; padding:2px 8px; font-weight:900;">OFFER: UAL (CSM)</div>
+                <h4 style="margin:10px 0 5px;">Student L. Chen</h4>
+                <p style="font-size:12px; opacity:0.8;">Fashion Design BA</p>
+            </div>
+        </div>
+        <div class="case-card">
+            <div class="case-overlay">
+                <div style="font-size:10px; background:var(--primary); color:#000; display:inline-block; padding:2px 8px; font-weight:900;">OFFER: RISD</div>
+                <h4 style="margin:10px 0 5px;">Student H. Wang</h4>
+                <p style="font-size:12px; opacity:0.8;">Industrial Design BFA</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="team" class="section">
+    <h2 class="section-title"><span class="cn">导师团队</span><span class="en" lang="en">Our Mentors</span></h2>
+    <div class="course-grid" style="background: none;">
+        <div style="border-bottom: 2px solid #eee; padding-bottom: 30px;">
+            <div style="background:var(--dark); color:var(--primary); padding:3px 12px; font-size:11px; font-weight:900; display:inline-block; margin-bottom:15px;">UCL | ARCHITECTURE</div>
+            <h4 style="font-size:22px; margin:0 0 10px;">Sophia</h4>
+            <div class="cn">伦敦大学学院 (UCL) 硕士。擅长跨学科实践。</div>
+            <div class="en" lang="en">MArch from UCL Bartlett. Expert in interdisciplinary design.</div>
+        </div>
+        <div style="border-bottom: 2px solid #eee; padding-bottom: 30px;">
+            <div style="background:var(--dark); color:var(--primary); padding:3px 12px; font-size:11px; font-weight:900; display:inline-block; margin-bottom:15px;">RCA | FASHION</div>
+            <h4 style="font-size:22px; margin:0 0 10px;">Cc Chen</h4>
+            <div class="cn">皇家艺术学院 (RCA) 硕士。注重实验性手作。</div>
+            <div class="en" lang="en">MA from RCA. Specialist in experimental craftsmanship.</div>
+        </div>
+        <div style="border-bottom: 2px solid #eee; padding-bottom: 30px;">
+            <div style="background:var(--dark); color:var(--primary); padding:3px 12px; font-size:11px; font-weight:900; display:inline-block; margin-bottom:15px;">UAL | INTERACTION</div>
+            <h4 style="font-size:22px; margin:0 0 10px;">Yuan</h4>
+            <div class="cn">伦敦艺术大学 (UAL) 硕士。擅长艺术与技术融合。</div>
+            <div class="en" lang="en">MA from UAL. Bridging art and technology.</div>
+        </div>
+    </div>
+</section>
+
+<section id="news" class="section" style="background: var(--grey);">
+    <h2 class="section-title"><span class="cn">艺术报道</span><span class="en" lang="en">Art Insights</span></h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <div style="background:#fff; border:1px solid #eee; overflow: hidden;">
+            <img src="images/news_london.jpg" alt="London Museum" style="width:100%; height:200px; object-fit:cover;">
+            <div style="padding:20px;">
+                <span style="font-weight:900; color:var(--primary); background:#000; padding:2px 8px; font-size:11px;">NEWS</span>
+                <h4 class="cn" style="margin:15px 0 10px;">伦敦博物馆直击：导师带队解析当代艺术</h4>
+                <h4 class="en" lang="en" style="margin:15px 0 10px;">London Museum Tour: Mentors Analyzing Art</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div style="font-size: 14px; opacity: 0.7;">hello@joinart.co.uk | +44 7450250911</div>
+    <div class="footer-logo">英国聚艺国际教育</div>
+</footer>
+
+<div id="courseModal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <div id="modalIn"></div>
+    </div>
+</div>
+
+<div id="ai-trigger" onclick="toggleAI()">
+    <svg viewBox="0 0 24 24"><path d="M21 16.5C21 16.88 20.79 17.21 20.47 17.38L12.57 21.82C12.41 21.94 12.21 22 12 22C11.79 22 11.59 21.94 11.43 21.82L3.53 17.38C3.21 17.21 3 16.88 3 16.5V7.5C3 7.12 3.21 6.79 3.53 6.62L11.43 2.18C11.59 2.06 11.79 2 12 2C12.21 2 12.41 2.06 12.57 2.18L20.47 6.62C20.79 6.79 21 7.12 21 7.5V16.5Z" stroke="white" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="var(--primary)"/></svg>
+</div>
+<div id="ai-window">
+    <div class="ai-header"><div><span class="cn">Join Art AI Assistant</span><span class="en" lang="en">Join Art AI Assistant</span></div><span onclick="toggleAI()" style="cursor:pointer; font-size:24px;">&times;</span></div>
+    <div class="ai-chat" id="chat"><div class="msg bot"><span class="cn">你好！我是 Join Art AI 助手。有什么我可以帮你的？你可以问我关于作品集、申请规划或本硕陪跑课程。</span><span class="en" lang="en">Hi! I'm Join Art AI Assistant. How can I help you? Ask me about portfolios, applications, or tutoring.</span></div></div>
+    <div class="ai-input"><input type="text" id="ai-msg-input" placeholder="输入问题 / Type a message..."><button class="ai-send" onclick="sendMsg()">></button></div>
+</div>
+
+<script>
+    let currentLang = 'cn';
+    
+    const courseData = {
+        portfolio: {
+            t: {cn:"艺术作品集培训", en:"Portfolio Training"},
+            kw: {cn:"RCA/UAL 导师团、批判性思维、叙事化排版", en:"RCA/UAL Mentors, Critical Thinking, Narrative Layout"},
+            main: {
+                cn: "针对 Top 30 艺术院校申请者。核心内容涵盖灵感发散、媒介实验、逻辑串联及排版叙事。",
+                en: "Targeted at Top 30 art school applicants. Core content covers ideation, media experimentation, logical connection, and narrative layout."
+            },
+            adv: {
+                cn: "拒绝流水线模板。我们利用伦敦一线设计资源，指导学生完成具有行业前瞻性的项目，确保作品集在名校教授手中停留时间超过 5 分钟。",
+                en: "Reject generic templates. Using London's frontline design resources, we guide students through forward-thinking projects, ensuring portfolios capture professors' attention for over 5 minutes."
+            }
+        },
+        tutoring: {
+            t: {cn:"本硕课程陪跑", en:"Degree Course Tutoring"},
+            kw: {cn:"独家学术管家、1对1 理论拆解、高分毕业计划", en:"Academic Butler, 1-on-1 Theory Analysis, High-score Graduation"},
+            main: {
+                cn: "针对在读生。解决学院课程作业难点，提供 Studio Feedback 深度复盘及指导。",
+                en: "For current students. Tackle challenging coursework and provide in-depth Studio Feedback reviews and guidance."
+            },
+            adv: {
+                cn: "独家“海外学业管家”。由熟悉英国学术评分体系的博士/硕士导师，协助解读复杂理论，助你稳拿 First Class 学位。",
+                en: "Exclusive 'Academic Butler'. Mentors with MA/PhD degrees familiar with the UK grading system help decode complex theories, ensuring you secure a First Class degree."
+            }
+        },
+        alevel: {
+            t: {cn:"A-level 艺术课程辅导", en:"A-level Art Tutoring"},
+            kw: {cn:"AO 评分对标、冲刺 A/A*、考纲精准覆盖", en:"AO Standards, Aim for A/A*, Syllabus Coverage"},
+            main: {
+                cn: "深度对接 CIE/Edexcel/OCR 考纲。强化速写、材料解析及 ESA（限时命题创作）专项突击。",
+                en: "Deep alignment with CIE/Edexcel/OCR syllabi. Intensify sketching, material analysis, and ESA workshops."
+            },
+            adv: {
+                cn: "针对考试局提供**英国本土艺术教师**视角下的创作建议。不仅是为了拿高分，更是为了在高中阶段就开始对接作品集逻辑，领先一步。",
+                en: "Creative advice from **UK-based art teachers**. Beyond high scores, we align your work with portfolio logic at the high school level, giving you a head start."
+            }
+        },
+        planning: {
+            t: {cn:"艺术留学申请规划", en:"Application Planning"},
+            kw: {cn:"全球院校库、定制化文书、仿真面试", en:"Global Schools, Bespoke Statements, Mock Interviews"},
+            main: {
+                cn: "全透明、管家式升学方案。包含精准选校、定制化文书润色及 RCA/UAL 风格仿真面试。",
+                en: "Fully transparent, concierge-style admission plans. Includes precise school selection, bespoke statements, and RCA/UAL-style mock interviews."
+            },
+            adv: {
+                cn: "凭借伦敦总部地缘优势，掌握第一手招生动态。提供包含英国、欧洲、美国、香港在内的多国联申方案。",
+                en: "Leveraging our London HQ location for first-hand admission trends. Providing multi-country strategies covering the UK, Europe, USA, and Hong Kong."
+            }
+        }
+    };
+
+    const schools = {
+        uk: [
+            {n:"RCA", f:{cn:"皇家艺术学院",en:"Royal College of Art"}, t:"Service Design", loc:"London", l:"https://www.rca.ac.uk/"},
+            {n:"CSM", f:{cn:"中央圣马丁",en:"Central Saint Martins"}, t:"Fashion/Jewelry", loc:"London", l:"https://www.arts.ac.uk/colleges/central-saint-martins"},
+            {n:"LCC", f:{cn:"伦敦传媒学院",en:"LCC"}, t:"Interaction/UI", loc:"London", l:"https://www.arts.ac.uk/colleges/london-college-of-communication"},
+            {n:"LCF", f:{cn:"伦敦时装学院",en:"LCF"}, t:"Fashion Mgmt", loc:"London", l:"https://www.arts.ac.uk/colleges/london-college-of-fashion"},
+            {n:"UCL Bartlett", f:{cn:"巴特莱特建筑学院",en:"Bartlett"}, t:"Architecture", loc:"London", l:"https://www.ucl.ac.uk/bartlett/"},
+            {n:"AA School", f:{cn:"AA建筑联盟",en:"AA School"}, t:"Architecture", loc:"London", l:"https://www.aaschool.ac.uk/"},
+            {n:"GSA", f:{cn:"格拉斯哥美院",en:"Glasgow Art"}, t:"Product/Interior", loc:"Glasgow", l:"https://www.gsa.ac.uk/"},
+            {n:"ECA", f:{cn:"爱丁堡艺院",en:"Edinburgh Art"}, t:"Illustration", loc:"Edinburgh", l:"https://www.eca.ed.ac.uk/"},
+            {n:"Camberwell", f:{cn:"坎伯韦尔",en:"Camberwell"}, t:"Illustration", loc:"London", l:"https://www.arts.ac.uk/colleges/camberwell-college-of-arts"},
+            {n:"Chelsea", f:{cn:"切尔西学院",en:"Chelsea"}, t:"Interior/Curation", loc:"London", l:"https://www.arts.ac.uk/colleges/chelsea-college-of-arts"},
+            {n:"Sheffield", f:{cn:"谢菲尔德大学",en:"Sheffield"}, t:"Architecture", loc:"Sheffield", l:"https://www.sheffield.ac.uk/architecture"},
+            {n:"Leeds", f:{cn:"利兹大学",en:"Leeds"}, t:"Design/Art", loc:"Leeds", l:"https://ahc.leeds.ac.uk/design"},
+            {n:"Kingston", f:{cn:"金斯顿大学",en:"Kingston"}, t:"Illustration", loc:"London", l:"https://www.kingston.ac.uk/faculties/kingston-school-of-art/"},
+            {n:"Goldsmiths", f:{cn:"金史密斯",en:"Goldsmiths"}, t:"Fine Art", loc:"London", l:"https://www.gold.ac.uk/"},
+            {n:"Westminster", f:{cn:"威斯敏斯特",en:"Westminster"}, t:"Fashion", loc:"London", l:"https://www.westminster.ac.uk/"}
+        ],
+        usa: [
+            {n:"RISD", f:{cn:"罗德岛设计学院",en:"RISD"}, t:"ID/Illustration", loc:"USA", l:"https://www.risd.edu/"},
+            {n:"Parsons", f:{cn:"帕森斯",en:"Parsons"}, t:"Fashion/Mgmt", loc:"NY", l:"https://www.newschool.edu/parsons/"},
+            {n:"Pratt", f:{cn:"普瑞特",en:"Pratt"}, t:"Interior", loc:"NY", l:"https://www.pratt.edu/"},
+            {n:"ArtCenter", f:{cn:"ACCD",en:"ArtCenter"}, t:"Trans. Design", loc:"CA", l:"https://www.artcenter.edu/"},
+            {n:"SVA", f:{cn:"纽约视觉艺术",en:"SVA"}, t:"Graphic/Motion", loc:"NY", l:"https://sva.edu/"},
+            {n:"Harvard GSD", f:{cn:"哈佛设计院",en:"GSD"}, t:"Architecture", loc:"USA", l:"https://www.gsd.harvard.edu/"},
+            {n:"Yale Art", f:{cn:"耶鲁艺院",en:"Yale Art"}, t:"Fine Art", loc:"USA", l:"https://www.art.yale.edu/"},
+            {n:"MIT Media", f:{cn:"MIT实验室",en:"MIT Media"}, t:"Interaction", loc:"USA", l:"https://www.media.mit.edu/"},
+            {n:"SAIC", f:{cn:"芝加哥艺校",en:"SAIC"}, t:"Fine Arts", loc:"Chicago", l:"https://www.saic.edu/"},
+            {n:"MICA", f:{cn:"马里兰艺院",en:"MICA"}, t:"Illustration", loc:"USA", l:"https://www.mica.edu/"},
+            {n:"CalArts", f:{cn:"加州艺术学院",en:"CalArts"}, t:"Animation", loc:"USA", l:"https://calarts.edu/"},
+            {n:"SCAD", f:{cn:"萨凡纳",en:"SCAD"}, t:"Luxury", loc:"USA", l:"https://www.scad.edu/"}
+        ],
+        eu: [
+            {n:"DAE", f:{cn:"埃因霍芬",en:"DAE"}, t:"Concept Design", loc:"NL", l:"https://www.designacademy.nl/"},
+            {n:"Delft", f:{cn:"代尔夫特理工",en:"TU Delft"}, t:"IPD/DfS", loc:"NL", l:"https://www.tudelft.nl/"},
+            {n:"Polimi", f:{cn:"米兰理工",en:"Polimi"}, t:"Service Design", loc:"Italy", l:"https://www.polimi.it/"},
+            {n:"ECAL", f:{cn:"洛桑设计学院",en:"ECAL"}, t:"Luxury/Product", loc:"Swiss", l:"https://www.ecal.ch/"},
+            {n:"Aalto", f:{cn:"阿尔托",en:"Aalto"}, t:"Collab. Design", loc:"Finland", l:"https://www.aalto.fi/"},
+            {n:"Konstfack", f:{cn:"国立工艺美院",en:"Konstfack"}, t:"Crafts", loc:"Sweden", l:"https://www.konstfack.se/"},
+            {n:"Umeå UID", f:{cn:"于默奥",en:"UID"}, t:"Trans. Design", loc:"Sweden", l:"https://www.umu.se/en/umea-institute-of-design/"},
+            {n:"Domus", f:{cn:"多莫斯",en:"Domus"}, t:"Fashion", loc:"Italy", l:"https://www.domusacademy.com/"}
+        ],
+        asia: [
+            {n:"HKU", f:{cn:"香港大学",en:"HKU"}, t:"Architecture", loc:"HK", l:"https://www.arch.hku.hk/"},
+            {n:"PolyU", f:{cn:"香港理工",en:"PolyU"}, t:"Interaction", loc:"HK", l:"https://www.sd.polyu.edu.hk/"},
+            {n:"CityU", f:{cn:"香港城市大学",en:"CityU"}, t:"Creative Media", loc:"HK", l:"https://www.scm.cityu.edu.hk/"},
+            {n:"TUA", f:{cn:"东京艺术大学",en:"Geidai"}, t:"Fine Art", loc:"Japan", l:"https://www.geidai.ac.jp/"},
+            {n:"MAU", f:{cn:"武藏野美大",en:"Musashino"}, t:"Visual Design", loc:"Japan", l:"https://www.musabi.ac.jp/"},
+            {n:"Tama Art", f:{cn:"多摩美术大学",en:"Tama Art"}, t:"Graphic", loc:"Japan", l:"https://www.tamabi.ac.jp/"},
+            {n:"SNU", f:{cn:"首尔大学",en:"SNU"}, t:"Design", loc:"Korea", l:"https://en.snu.ac.kr/"},
+            {n:"NUS", f:{cn:"新国立",en:"NUS"}, t:"Industrial", loc:"Singapore", l:"https://cde.nus.edu.hk/did/"}
+        ]
+    };
+
+    function toggleLang() {
+        currentLang = currentLang === 'cn' ? 'en' : 'cn';
+        document.querySelectorAll('.cn').forEach(el => el.style.display = currentLang === 'cn' ? 'block' : 'none');
+        document.querySelectorAll('[lang="en"]').forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
+        document.querySelector('.lang-switch').innerText = currentLang === 'cn' ? '中文 | EN' : 'EN | 中文';
+        const activeTab = document.querySelector('.tab-btn.active');
+        renderSchools(activeTab.textContent.split(' ')[0].toLowerCase(), activeTab);
+    }
+
+    function showModal(k) {
+        const d = courseData[k];
+        const advTitle = currentLang === 'cn' ? "Join Art 优势" : "Join Art Advantages";
+        document.getElementById('modalIn').innerHTML = `
+            <div style="font-size:12px; color:var(--primary); background:var(--dark); padding:3px 12px; display:inline-block; margin-bottom:15px; font-weight:900;">${d.kw[currentLang]}</div>
+            <h2 style="margin:0 0 20px 0; font-size:26px;">${d.t[currentLang]}</h2>
+            <div style="font-size:16px; line-height:1.8; color:#444; margin-bottom:20px;">${d.main[currentLang]}</div>
+            <div class="advantage-box">
+                <div class="advantage-tag">${advTitle}</div>
+                <div style="font-size:15px; font-weight:700; color:#000; line-height:1.6;">${d.adv[currentLang]}</div>
+            </div>
+        `;
+        document.getElementById('courseModal').style.display = 'flex';
+    }
+
+    function renderSchools(reg, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('schoolGrid').innerHTML = schools[reg].map(s => `
+            <a href="${s.l}" target="_blank" class="school-card">
+                <div>
+                    <div class="school-loc">${s.loc}</div>
+                    <b>${s.n}</b>
+                    <span style="font-size:12px; opacity:0.8;">${s.f[currentLang]}</span>
+                </div>
+                <div style="font-size:10px; border-top:1px solid #eee; margin-top:10px; padding-top:10px;">${s.t}</div>
+            </a>
+        `).join('');
+    }
+
+    function closeModal() { document.getElementById('courseModal').style.display = 'none'; }
+    function toggleAI() { const win = document.getElementById('ai-window'); win.style.display = win.style.display === 'flex' ? 'none' : 'flex'; }
+    
+    //修复后的 AI 对话逻辑
+    function sendMsg() {
+        const input = document.getElementById('ai-msg-input');
+        const chat = document.getElementById('chat');
+        const text = input.value.trim();
+
+        if (text === "") return;
+
+        // 添加用户消息
+        const userDiv = document.createElement('div');
+        userDiv.className = 'msg user';
+        userDiv.innerText = text;
+        chat.appendChild(userDiv);
+
+        // 清空输入框
+        input.value = '';
+
+        // 模拟 AI 回复逻辑
+        setTimeout(() => {
+            const botDiv = document.createElement('div');
+            botDiv.className = 'msg bot';
+            
+            // 简单的关键词回复逻辑（中英文适配）
+            let reply = '';
+            const lowerText = text.toLowerCase();
+
+            if (currentLang === 'cn') {
+                if (lowerText.includes("作品集")) {
+                    reply = "关于作品集培训，我们有来自 RCA/UAL 的导师团队。您想预约一次免费的作品集评估吗？";
+                } else if (lowerText.includes("陪跑")) {
+                    reply = "本硕陪跑课程是我们的特色，由熟悉英国学术体系的导师提供 1 对 1 指导。您目前在读什么专业？";
+                } else if (lowerText.includes("规划") || lowerText.includes("申请")) {
+                    reply = "艺术留学申请规划包含选校、文书润色和仿真面试。我们可以为您定制多国联申方案。";
+                } else {
+                    reply = "收到您的消息。我们的专业顾问老师会尽快通过邮件 (hello@joinart.co.uk) 或电话联系您。";
+                }
+            } else {
+                if (lowerText.includes("portfolio")) {
+                    reply = "For portfolio training, we have mentors from RCA/UAL. Would you like to book a free assessment?";
+                } else if (lowerText.includes("tutoring")) {
+                    reply = "Degree Course Tutoring is our specialty, with 1-on-1 guidance from mentors familiar with the UK academic system. What is your current major?";
+                } else if (lowerText.includes("planning") || lowerText.includes("application")) {
+                    reply = "Our planning services include school selection, essay polishing, and mock interviews. We can create a multi-country application strategy for you.";
+                } else {
+                    reply = "Message received. Our professional consultant will contact you shortly via email (hello@joinart.co.uk) or phone.";
+                }
+            }
+
+            botDiv.innerHTML = `<span class="${currentLang === 'cn' ? '' : 'en'}">${reply}</span>`;
+            chat.appendChild(botDiv);
+            
+            // 自动滚动到底部
+            chat.scrollTop = chat.scrollHeight;
+        }, 800);
+
+        // 发送后立即滚动
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    // 绑定回车键发送
+    document.getElementById('ai-msg-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            sendMsg();
+        }
+    });
+
+    window.onload = () => renderSchools('uk', document.querySelector('.tab-btn'));
+</script>
+</body>
+</html>
