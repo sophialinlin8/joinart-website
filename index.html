@@ -619,7 +619,7 @@
     header {
         flex-direction: column;
         height: auto;
-        padding: 15px;
+        padding: 20px 10px;
     }
     nav {
         gap: 10px;
@@ -628,10 +628,13 @@
         margin-top: 10px;
     }
     nav a {
-        font-size: 11px;
+        font-size: 15px;
+        font-weight: 800; /* 加粗看起来更清晰 */
+        letter-spacing: 0px; /* 缩小字母间距防止太长 */
     }
     .logo img {
-        height: 50px; /* 手机端缩小Logo */
+        height: 80px; /* 手机端缩小Logo */
+        margin-bottom: 15px; /* 与下方导航保持间距 */
     }
 }
 
