@@ -38,24 +38,40 @@
     position: relative;
     overflow: hidden;
 }
+/* --- 核心显隐逻辑：修正版 --- */
 
-/* --- 核心显隐逻辑：纯净切换 --- */
+/* 1. 默认状态：先让所有 span 能够显示（因为它们有动画 transform） */
+.banner-inner span { 
+    display: none; /* 初始隐藏 */
+}
 
-/* 默认状态：所有 span 隐藏，防止闪烁 */
-.banner-inner span { display: none; }
+/* 2. 中文模式：激活时显示中文，彻底锁死英文 */
+.banner-inner.lang-cn .cn { 
+    display: block !important; 
+}
+.banner-inner.lang-cn .en { 
+    display: none !important; 
+}
 
-/* 中文模式：只显示 .cn，彻底移除 .en */
-.banner-inner.lang-cn .cn { display: block !important; }
-.banner-inner.lang-cn .en { display: none !important; }
+/* 3. 英文模式：激活时显示英文，彻底锁死中文 */
+.banner-inner.lang-en .en { 
+    display: block !important; 
+    /* 关键：确保英文显示时也能触发从下往上的动画 */
+    animation: reveal-up 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+.banner-inner.lang-en .cn { 
+    display: none !important; 
+}
 
-/* 英文模式：只显示 .en，彻底移除 .cn */
-.banner-inner.lang-en .en { display: block !important; }
-.banner-inner.lang-en .cn { display: none !important; }
-
-/* --- 文字入场动效 (方案三) --- */
+/* --- 文字入场动效 --- */
 .reveal-text {
     overflow: hidden;
     margin: 15px 0;
+}
+.reveal-text span {
+    /* 初始位置在下方 */
+    transform: translateY(115%);
+    animation: reveal-up 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 .reveal-text span {
