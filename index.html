@@ -341,10 +341,11 @@
 
 <div id="hero-banner" class="banner-inner lang-cn">
     <div class="banner-content">
-     <h1 class="reveal-text main-title">
-    <span class="cn">Join Art，让艺术梦想照进现实！</span>
-    <span class="en">Join Art, making art dreams a reality!</span>
-</h1>
+        <h1 class="reveal-text main-title">
+            <span class="cn">Join Art，让艺术梦想照进现实！</span>
+            <span class="en">Join Art, making art dreams a reality!</span>
+        </h1>
+        
         <p class="reveal-text sub-title delay">
             <span class="cn">伦敦总部 · 全球视野 · 顶尖艺术教育</span>
             <span class="en">London HQ · Global Vision · Elite Art Education</span>
@@ -593,8 +594,7 @@
     background: #ffffff;
     transform: translateY(-2px);
 }
-
-    /* ============================================================
+/* ============================================================
    响应式核心补丁：解决手机自适应与中英文布局问题
    ============================================================ */
 
@@ -1122,8 +1122,7 @@ const schools = {
         {n:"UBA", f:{cn:"布宜诺斯艾利斯大学",en:"Universidad de Buenos Aires"}, r:36, t:"Design", loc:"Argentina", l:"https://www.uba.ar/"}
     ]
 };
-    <script>
- function toggleLang() {
+    function toggleLang() {
         currentLang = currentLang === 'cn' ? 'en' : 'cn';
         document.querySelectorAll('.cn').forEach(el => el.style.display = currentLang === 'cn' ? 'block' : 'none');
         document.querySelectorAll('[lang="en"]').forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
@@ -1131,9 +1130,6 @@ const schools = {
         const activeTab = document.querySelector('.tab-btn.active');
         renderSchools(activeTab.textContent.split(' ')[0].toLowerCase(), activeTab);
     }
-
-}
-</script>
 
     function showModal(k) {
         const d = courseData[k];
