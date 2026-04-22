@@ -341,11 +341,10 @@
 
 <div id="hero-banner" class="banner-inner lang-cn">
     <div class="banner-content">
-        <h1 class="reveal-text main-title">
-            <span class="cn">Join Art，让艺术梦想照进现实！</span>
-            <span class="en">Join Art, making art dreams a reality!</span>
-        </h1>
-        
+     <h1 class="reveal-text main-title">
+    <span class="cn">Join Art，让艺术梦想照进现实！</span>
+    <span class="en">Join Art, making art dreams a reality!</span>
+</h1>
         <p class="reveal-text sub-title delay">
             <span class="cn">伦敦总部 · 全球视野 · 顶尖艺术教育</span>
             <span class="en">London HQ · Global Vision · Elite Art Education</span>
@@ -1123,14 +1122,40 @@ const schools = {
         {n:"UBA", f:{cn:"布宜诺斯艾利斯大学",en:"Universidad de Buenos Aires"}, r:36, t:"Design", loc:"Argentina", l:"https://www.uba.ar/"}
     ]
 };
-    function toggleLang() {
-        currentLang = currentLang === 'cn' ? 'en' : 'cn';
-        document.querySelectorAll('.cn').forEach(el => el.style.display = currentLang === 'cn' ? 'block' : 'none');
-        document.querySelectorAll('[lang="en"]').forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
-        document.querySelector('.lang-switch').innerText = currentLang === 'cn' ? '中文 | EN' : 'EN | 中文';
-        const activeTab = document.querySelector('.tab-btn.active');
-        renderSchools(activeTab.textContent.split(' ')[0].toLowerCase(), activeTab);
+    <script>
+function toggleLang() {
+    // 1. 找到 Banner 容器
+    const banner = document.getElementById('hero-banner');
+    
+    // 2. 检查当前是中文还是英文
+    const isEn = banner.classList.contains('lang-cn');
+    
+    // 3. 切换 Banner 的类名（控制 Banner 内部的显隐）
+    if(isEn) {
+        banner.classList.remove('lang-cn');
+        banner.classList.add('lang-en');
+    } else {
+        banner.classList.remove('lang-en');
+        banner.classList.add('lang-cn');
     }
+
+    // --- 这里就是你问的那两行代码的位置 ---
+    // 4. 抓取网页中所有带 .cn 和 .en 类的标签
+    const cnElements = document.querySelectorAll('.cn');
+    const enElements = document.querySelectorAll('.en');
+
+    // 5. 循环遍历所有标签，根据状态决定显示哪个
+    if(isEn) {
+        // 如果是从中文变英文
+        cnElements.forEach(el => el.style.display = 'none');
+        enElements.forEach(el => el.style.display = 'inline-block'); // 或者 'block'
+    } else {
+        // 如果是从英文变中文
+        cnElements.forEach(el => el.style.display = 'inline-block');
+        enElements.forEach(el => el.style.display = 'none');
+    }
+}
+</script>
 
     function showModal(k) {
         const d = courseData[k];
