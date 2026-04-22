@@ -595,6 +595,88 @@
     transform: translateY(-2px);
 }
 
+    /* ============================================================
+   响应式核心补丁：解决手机自适应与中英文布局问题
+   ============================================================ */
+
+/* 1. 移动端导航栏适配：防止挤压 */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+    }
+    nav {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    nav a {
+        font-size: 11px;
+    }
+    .logo img {
+        height: 50px; /* 手机端缩小Logo */
+    }
+}
+
+/* 2. Banner(抬头)自适应修正 */
+@media (max-width: 768px) {
+    .banner-inner {
+        height: auto !important; /* 允许高度根据文字自动撑开 */
+        min-height: 350px; /* 降低最小高度限制 */
+        padding: 60px 20px;
+    }
+    
+    /* 解决英文版文字太长导致溢出的问题 */
+    .main-title .en, .main-title .cn {
+        font-size: 24px !important; /* 强制统一字体大小 */
+        line-height: 1.2;
+        padding: 0 10px;
+    }
+    
+    .sub-title .en, .sub-title .cn {
+        font-size: 13px !important;
+        letter-spacing: 1px !important;
+        line-height: 1.4;
+    }
+    
+    .reveal-text {
+        overflow: visible; /* 手机端防止截断 */
+    }
+}
+
+/* 3. “关于我们” 黑色区域图片适配 */
+@media (max-width: 768px) {
+    #about > div:first-child {
+        aspect-ratio: 4/5 !important; /* 手机端图片变窄长，给文字留空间 */
+    }
+    #about h2 {
+        font-size: 24px !important;
+    }
+    #about div[style*="font-size: 18px"] {
+        font-size: 14px !important; /* 缩小简介文字 */
+        line-height: 1.6 !important;
+    }
+}
+
+/* 4. 英文版通用优化：防止长单词撑破布局 */
+[lang="en"] {
+    word-break: break-word;
+    hyphens: auto;
+    line-height: 1.4;
+}
+
+/* 5. 院校卡片自适应：手机端一行两个 */
+@media (max-width: 480px) {
+    .school-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .school-card b {
+        font-size: 13px;
+    }
+}
 /* 移动端自适应 */
 @media (max-width: 1200px) {
     .apple-grid-container { grid-template-columns: repeat(2, 1fr); }
