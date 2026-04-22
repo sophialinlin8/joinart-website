@@ -828,11 +828,11 @@
             </div>
             
             <div class="cn" style="line-height: 2; max-width: 850px; margin: 0 auto; color: #444; font-size: 15px;">
-                伦敦大学学院 <strong>(UCL Bartlett)</strong> 建筑学硕士。作为工作室创始人与综合学科主管，Sophia 拥有极高的学术敏锐度。她以 Bartlett 严密的逻辑推演为核心，其跨学科教学模式更是在<strong>产品设计、交互装置及媒体艺术</strong>领域成效显著，多名学员凭借极具社会批判性与叙事深度的作品集，实现了从传统设计向未来跨媒介设计的成功转型。
+                伦敦大学学院 <strong>(UCL Bartlett)</strong> 建筑学硕士。作为联合创始人与综合学科主管，Sophia 拥有极高的学术敏锐度。她以 Bartlett 严密的逻辑推演为核心，其跨学科教学模式更是在<strong>产品设计、交互装置及媒体艺术</strong>领域成效显著，多名学员凭借极具社会批判性与叙事深度的作品集，实现了从传统设计向未来跨媒介设计的成功转型。
             </div>
             
             <div class="en" lang="en" style="font-size: 13px; opacity: 0.6; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto; font-style: italic;">
-                MArch from UCL Bartlett. As Studio Founder and Head of Interdisciplinary Studies, Sophia possesses profound academic acumen. Centered on the rigorous logical deduction characteristic of Bartlett, her interdisciplinary teaching methodology has yielded significant results in product design, interactive installations, and media arts.
+                MArch from UCL Bartlett. As Co-Founder and Head of Interdisciplinary Studies, Sophia possesses profound academic acumen. Centered on the rigorous logical deduction characteristic of Bartlett, her interdisciplinary teaching methodology has yielded significant results in product design, interactive installations, and media arts.
             </div>
         </div>
 
@@ -1139,13 +1139,34 @@ const schools = {
     ]
 };
     function toggleLang() {
-        currentLang = currentLang === 'cn' ? 'en' : 'cn';
-        document.querySelectorAll('.cn').forEach(el => el.style.display = currentLang === 'cn' ? 'block' : 'none');
-        document.querySelectorAll('[lang="en"]').forEach(el => el.style.display = currentLang === 'en' ? 'block' : 'none');
-        document.querySelector('.lang-switch').innerText = currentLang === 'cn' ? '中文 | EN' : 'EN | 中文';
-        const activeTab = document.querySelector('.tab-btn.active');
-        renderSchools(activeTab.textContent.split(' ')[0].toLowerCase(), activeTab);
+    const banner = document.getElementById('hero-banner');
+    if (!banner) return;
+
+    // 1. 判断当前状态
+    const isCurrentlyCn = banner.classList.contains('lang-cn');
+
+    // 2. 切换 Banner 类名
+    if (isCurrentlyCn) {
+        banner.classList.remove('lang-cn');
+        banner.classList.add('lang-en');
+    } else {
+        banner.classList.remove('lang-en');
+        banner.classList.add('lang-cn');
     }
+
+    // 3. 切换页面【其他部分】的文字
+    // 我们排除掉 banner 内部的元素，让 CSS 自动处理 Banner 内部
+    document.querySelectorAll('.cn').forEach(el => {
+        if (!banner.contains(el)) {
+            el.style.display = isCurrentlyCn ? 'none' : 'block';
+        }
+    });
+    document.querySelectorAll('.en').forEach(el => {
+        if (!banner.contains(el)) {
+            el.style.display = isCurrentlyCn ? 'block' : 'none';
+        }
+    });
+}
 
     function showModal(k) {
         const d = courseData[k];
