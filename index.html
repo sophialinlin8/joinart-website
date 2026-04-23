@@ -1503,5 +1503,34 @@ window.addEventListener('click', function(event) {
         closeModal();
     }
 });
+    // --- 强制关闭逻辑开始 ---
+(function() {
+    // 这是一个自动执行的保险函数
+    function forceClose() {
+        const modal = document.getElementById('courseModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            console.log("弹窗已关闭"); // 你可以在浏览器按F12查看是否触发
+        }
+    }
+
+    // 每隔 1 秒检查一次叉号按钮，确保它能被点击
+    setInterval(() => {
+        const btn = document.getElementById('closeBtn');
+        if (btn && !btn.onclick) {
+            btn.onclick = forceClose;
+        }
+        
+        // 同时也给背景遮罩加一个点击关闭
+        const bg = document.getElementById('courseModal');
+        if (bg && !bg.onclick) {
+            bg.onclick = function(e) {
+                if (e.target === bg) forceClose();
+            };
+        }
+    }, 1000);
+})();
+// --- 强制关闭逻辑结束 ---
 </script>
 </html>
