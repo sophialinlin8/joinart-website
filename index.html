@@ -186,6 +186,15 @@
     background: var(--primary);
     color: #000; /* 悬停时按钮反色，黑色字 */
 }
+        <div id="modal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <div id="modal-inner-content">
+            <h2 id="modal-title"></h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+</div>
 
         /* 院校库 */
         .tabs { display: flex; gap: 5px; background: #eee; padding: 5px; margin-bottom: 30px; width: fit-content; flex-wrap: wrap; }
@@ -1288,12 +1297,11 @@ const schools = {
         document.getElementById('courseModal').style.display = 'flex';
     }
     // 关闭课程详情弹窗
-    function closeModal() {
-        const modal = document.getElementById('modal');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto'; // 恢复滚动
-        }
+  function closeModal() {
+    const modal = document.getElementById('course-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // 恢复背景滚动
+}
     }
 
     // 关闭 Cookie 隐私弹窗
