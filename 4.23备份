@@ -341,7 +341,25 @@
     </style>
 </head>
 <body>
-
+<div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+        <p class="cn">
+            我们使用 Cookie 来提升您的浏览体验。继续访问即表示您同意我们的<a href="#" style="color:var(--primary)">隐私政策</a>。
+        </p>
+        <p class="en">
+            We use cookies to enhance your experience. By continuing to visit this site you agree to our <a href="#" style="color:var(--primary)">Privacy Policy</a>.
+        </p>
+        <div class="cookie-buttons">
+            <button onclick="acceptCookies()" class="cookie-btn accept">
+                <span class="cn">接受</span><span class="en">Accept</span>
+            </button>
+            <button onclick="closeCookieBanner()" class="cookie-btn close">
+                <span class="cn">关闭</span><span class="en">Close</span>
+            </button>
+        </div>
+    </div>
+</div>
+    
 <header>
     <a href="#" class="logo"><img src="images/logo.png" alt="JOIN ART LOGO"></a>
     <nav>
@@ -514,6 +532,78 @@
 </section>
 
 <style>
+
+    /* Cookie 弹窗基础样式 */
+.cookie-banner {
+    position: fixed;
+    bottom: -100px; /* 初始隐藏在屏幕外 */
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    z-index: 9999;
+    padding: 20px 5%;
+    transition: bottom 0.5s ease;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+}
+
+/* 当激活时滑入 */
+.cookie-banner.active {
+    bottom: 0;
+}
+
+.cookie-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.cookie-content p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.cookie-btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 12px;
+    border: none;
+    transition: 0.3s;
+}
+
+.cookie-btn.accept {
+    background: var(--primary);
+    color: #000;
+}
+
+.cookie-btn.close {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+/* 手机端适配 */
+@media (max-width: 768px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .cookie-banner {
+        padding: 25px 20px;
+    }
+}
 /* 响应式网格布局 */
 .apple-grid-container {
     display: grid;
@@ -1246,6 +1336,37 @@ function renderSchools(reg, btn) {
         `;
     }).join('');
 }
+    // --- Cookie 弹窗逻辑 ---
+
+// 页面加载时检查是否已经点击过“接受”
+document.addEventListener("DOMContentLoaded", function() {
+    const banner = document.getElementById('cookie-banner');
+    const cookieAccepted = localStorage.getItem('cookieAccepted');
+    
+    if (!cookieAccepted) {
+        // 如果没点过，延迟 1 秒弹出
+        setTimeout(() => {
+            banner.classList.add('active');
+        }, 1000);
+    }
+});
+
+function acceptCookies() {
+    localStorage.setItem('cookieAccepted', 'true');
+    closeCookieBanner();
+}
+
+function closeCookieBanner() {
+    document.getElementById('cookie-banner').classList.remove('active');
+}
+
+// 修改你原有的 toggleLang 函数，确保弹窗也支持切换
+// 在你现有的 toggleLang() 函数末尾添加：
+/*
+    const banner = document.getElementById('cookie-banner');
+    const isEn = (某个判断状态); 
+    // 参考之前的逻辑，确保 banner 里的 .cn/.en 也能正常显隐
+*/
     
     //修复后的 AI 对话逻辑
     function sendMsg() {
