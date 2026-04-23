@@ -1287,6 +1287,27 @@ const schools = {
         `;
         document.getElementById('courseModal').style.display = 'flex';
     }
+
+    // 1. 关闭课程详情弹窗逻辑
+function closeModal() {
+    // 这里的 ID 必须和上面的 HTML 保持一致，都叫 courseModal
+    const modal = document.getElementById('courseModal');
+    if (modal) {
+        modal.style.display = 'none'; // 隐藏弹窗，返回主页
+        document.body.style.overflow = 'auto'; // 恢复主页滚动
+    }
+}
+
+// 2. 关闭 Cookie 弹窗逻辑 (顺便修复你之前的另一个问题)
+function closeCookieBanner() {
+    const cb = document.getElementById('cookie-banner');
+    if (cb) {
+        cb.classList.remove('active');
+        // 可选：记录用户已关闭，避免刷新后再次弹出
+        sessionStorage.setItem('cookieClosed', 'true');
+    }
+}
+    
 function renderSchools(reg, btn) {
     // 1. 处理 Tab 按钮的高亮状态
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
