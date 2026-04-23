@@ -341,7 +341,6 @@
     </style>
 </head>
 <body>
-
 <div id="cookie-banner" class="cookie-banner">
     <div class="cookie-content">
         <p class="cn">
@@ -360,7 +359,7 @@
         </div>
     </div>
 </div>
-
+    
 <header>
     <a href="#" class="logo"><img src="images/logo.png" alt="JOIN ART LOGO"></a>
     <nav>
@@ -1244,38 +1243,6 @@ const schools = {
         {n:"UBA", f:{cn:"布宜诺斯艾利斯大学",en:"Universidad de Buenos Aires"}, r:36, t:"Design", loc:"Argentina", l:"https://www.uba.ar/"}
     ]
 };
-
-// --- Cookie 弹窗逻辑 ---
-
-// 页面加载时检查是否已经点击过“接受”
-document.addEventListener("DOMContentLoaded", function() {
-    const banner = document.getElementById('cookie-banner');
-    const cookieAccepted = localStorage.getItem('cookieAccepted');
-    
-    if (!cookieAccepted) {
-        // 如果没点过，延迟 1 秒弹出
-        setTimeout(() => {
-            banner.classList.add('active');
-        }, 1000);
-    }
-});
-
-function acceptCookies() {
-    localStorage.setItem('cookieAccepted', 'true');
-    closeCookieBanner();
-}
-
-function closeCookieBanner() {
-    document.getElementById('cookie-banner').classList.remove('active');
-}
-
-// 修改你原有的 toggleLang 函数，确保弹窗也支持切换
-// 在你现有的 toggleLang() 函数末尾添加：
-/*
-    const banner = document.getElementById('cookie-banner');
-    const isEn = (某个判断状态); 
-    // 参考之前的逻辑，确保 banner 里的 .cn/.en 也能正常显隐
-*/
     function toggleLang() {
     const banner = document.getElementById('hero-banner');
     if (!banner) return;
@@ -1369,62 +1336,38 @@ function renderSchools(reg, btn) {
         `;
     }).join('');
 }
-    // --- 弹窗交互修复方案 ---
+    // --- Cookie 弹窗逻辑 ---
 
-// 1. 打开弹窗
-function showModal(type) {
-    const modal = document.getElementById('modal'); // 确保你的弹窗最外层 ID 是 modal
-    if (!modal) return;
+// 页面加载时检查是否已经点击过“接受”
+document.addEventListener("DOMContentLoaded", function() {
+    const banner = document.getElementById('cookie-banner');
+    const cookieAccepted = localStorage.getItem('cookieAccepted');
     
-    // 这里可以根据 type 加载不同的内容（可选）
-    console.log("Opening modal for:", type);
-    
-    modal.style.display = 'flex'; // 显示弹窗
-    document.body.style.overflow = 'hidden'; // 锁定屏幕滚动，防止穿透
-}
-
-  closeModal();
+    if (!cookieAccepted) {
+        // 如果没点过，延迟 1 秒弹出
+        setTimeout(() => {
+            banner.classList.add('active');
+        }, 1000);
     }
+});
 
-// --- 弹窗交互修复方案 ---
-
-// 1. 打开弹窗
-function showModal(type) {
-    const modal = document.getElementById('modal'); // 确保你的弹窗最外层 ID 是 modal
-    if (!modal) return;
-    
-    // 这里可以根据 type 加载不同的内容（可选）
-    console.log("Opening modal for:", type);
-    
-    modal.style.display = 'flex'; // 显示弹窗
-    document.body.style.overflow = 'hidden'; // 锁定屏幕滚动，防止穿透
+function acceptCookies() {
+    localStorage.setItem('cookieAccepted', 'true');
+    closeCookieBanner();
 }
 
-// 2. 关闭弹窗的函数
-function closeModal() {
-    const modal = document.getElementById('modal');
-    if (!modal) return;
+function closeCookieBanner() {
+    document.getElementById('cookie-banner').classList.remove('active');
+}
+
+// 修改你原有的 toggleLang 函数，确保弹窗也支持切换
+// 在你现有的 toggleLang() 函数末尾添加：
+/*
+    const banner = document.getElementById('cookie-banner');
+    const isEn = (某个判断状态); 
+    // 参考之前的逻辑，确保 banner 里的 .cn/.en 也能正常显隐
+*/
     
-    modal.style.display = 'none'; // 隐藏弹窗
-    document.body.style.overflow = 'auto'; // 恢复页面滚动
-}
-
-// 3. 增强：点击弹窗外部（黑色遮罩区）也能关闭
-window.onclick = function(event) {
-    const modal = document.getElementById('modal');
-    if (event.target == modal) {
-        closeModal();
-    }
-}
-
-// 4. 增强：按下键盘 ESC 键也能关闭
-document.onkeydown = function(evt) {
-    evt = evt || window.event;
-    if (evt.keyCode == 27) {
-        closeModal();
-    }
-};
-};
     //修复后的 AI 对话逻辑
     function sendMsg() {
         const input = document.getElementById('ai-msg-input');
