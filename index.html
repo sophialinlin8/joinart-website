@@ -186,15 +186,6 @@
     background: var(--primary);
     color: #000; /* 悬停时按钮反色，黑色字 */
 }
-        <div id="modal" class="modal">
-    <div class="modal-content">
-        <button class="close-modal" onclick="closeModal()">&times;</button>
-        <div id="modal-inner-content">
-            <h2 id="modal-title"></h2>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-</div>
 
         /* 院校库 */
         .tabs { display: flex; gap: 5px; background: #eee; padding: 5px; margin-bottom: 30px; width: fit-content; flex-wrap: wrap; }
@@ -1296,22 +1287,6 @@ const schools = {
         `;
         document.getElementById('courseModal').style.display = 'flex';
     }
-    // 关闭课程详情弹窗
-  function closeModal() {
-    const modal = document.getElementById('course-modal');
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto'; // 恢复背景滚动
-}
-    }
-
-    // 关闭 Cookie 隐私弹窗
-    function closeCookieBanner() {
-        const cb = document.getElementById('cookie-banner');
-        if (cb) {
-            cb.classList.remove('active');
-            sessionStorage.setItem('cookieClosed', 'true'); // 本次会话不再弹出
-        }
-    }
 function renderSchools(reg, btn) {
     // 1. 处理 Tab 按钮的高亮状态
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1392,23 +1367,6 @@ function closeCookieBanner() {
     const isEn = (某个判断状态); 
     // 参考之前的逻辑，确保 banner 里的 .cn/.en 也能正常显隐
 */
-    function closeModal() {
-    const modal = document.getElementById('modal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // 恢复页面滚动
-    }
-}
-
-// 2. 关闭 Cookie 隐私弹窗 (两个功能)
-function closeCookieBanner() {
-    const cb = document.getElementById('cookie-banner');
-    if (cb) {
-        cb.classList.remove('active');
-        // 记录本次会话已手动关闭
-        sessionStorage.setItem('cookieClosed', 'true');
-    }
-}
     
     //修复后的 AI 对话逻辑
     function sendMsg() {
@@ -1479,4 +1437,45 @@ function closeCookieBanner() {
     window.onload = () => renderSchools('uk', document.querySelector('.tab-btn'));
 </script>
 </body>
+    <div id="modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <div id="modal-inner-content">
+            <h2 id="modal-title"></h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * 第二部分：关闭功能的脚本逻辑
+ * 这里的函数名 closeModal 必须和上面按钮里的名称完全一致
+ */
+
+// 关闭课程弹窗
+function closeModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // 恢复页面滚动
+    }
+}
+
+// 关闭 Cookie 弹窗
+function closeCookieBanner() {
+    const cb = document.getElementById('cookie-banner');
+    if (cb) {
+        cb.classList.remove('active');
+    }
+}
+
+// 点击弹窗外部黑色区域自动关闭
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('modal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+</script>
 </html>
