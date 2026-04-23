@@ -1367,6 +1367,23 @@ function closeCookieBanner() {
     const isEn = (某个判断状态); 
     // 参考之前的逻辑，确保 banner 里的 .cn/.en 也能正常显隐
 */
+    function closeModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // 恢复页面滚动
+    }
+}
+
+// 2. 关闭 Cookie 隐私弹窗 (两个功能)
+function closeCookieBanner() {
+    const cb = document.getElementById('cookie-banner');
+    if (cb) {
+        cb.classList.remove('active');
+        // 记录本次会话已手动关闭
+        sessionStorage.setItem('cookieClosed', 'true');
+    }
+}
     
     //修复后的 AI 对话逻辑
     function sendMsg() {
