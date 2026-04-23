@@ -1474,12 +1474,17 @@ function closeCookieBanner() {
  * 这里的函数名 closeModal 必须和上面按钮里的名称完全一致
  */
 
-// 关闭课程弹窗
+// 这个函数就是负责“关闭返回”的
 function closeModal() {
-    const modal = document.getElementById('modal');
+    // 1. 获取弹窗元素
+    const modal = document.getElementById('courseModal');
+    
     if (modal) {
+        // 2. 将显示状态改为“无”，这样就返回主页了
         modal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // 恢复页面滚动
+        
+        // 3. 恢复主页的滚动条
+        document.body.style.overflow = 'auto';
     }
 }
 
