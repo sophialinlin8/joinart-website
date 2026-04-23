@@ -1369,7 +1369,44 @@ function renderSchools(reg, btn) {
         `;
     }).join('');
 }
+    // --- 弹窗交互修复方案 ---
+
+// 1. 打开弹窗
+function showModal(type) {
+    const modal = document.getElementById('modal'); // 确保你的弹窗最外层 ID 是 modal
+    if (!modal) return;
     
+    // 这里可以根据 type 加载不同的内容（可选）
+    console.log("Opening modal for:", type);
+    
+    modal.style.display = 'flex'; // 显示弹窗
+    document.body.style.overflow = 'hidden'; // 锁定屏幕滚动，防止穿透
+}
+
+// 2. 关闭弹窗的函数
+function closeModal() {
+    const modal = document.getElementById('modal');
+    if (!modal) return;
+    
+    modal.style.display = 'none'; // 隐藏弹窗
+    document.body.style.overflow = 'auto'; // 恢复页面滚动
+}
+
+// 3. 增强：点击弹窗外部（黑色遮罩区）也能关闭
+window.onclick = function(event) {
+    const modal = document.getElementById('modal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+
+// 4. 增强：按下键盘 ESC 键也能关闭
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+        closeModal();
+    }
+};
     //修复后的 AI 对话逻辑
     function sendMsg() {
         const input = document.getElementById('ai-msg-input');
